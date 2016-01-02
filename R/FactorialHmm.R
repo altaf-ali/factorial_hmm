@@ -93,7 +93,7 @@ rand_matrix <- function(x, rows, cols) {
   matrix(sample(x, rows * cols, replace = TRUE), rows, cols)
 }
 
-FactorialHmm <- function()
+FactorialHmm_OLD <- function()
 {
   env <- environment()
   
@@ -438,17 +438,51 @@ FactorialHmm <- function()
   
   assign('this', this, envir = env)
   
+  class(this) <- append(class(this), "FactorialHmm_OLD")
+  
+  return(this)
+}
+
+FactorialHmm <- function()
+{
+  env <- environment()
+  
+  alpha <- NA
+  
+  this <- list(
+    env = env,
+    
+    # get/set value
+    get_value = function(key) {
+      return(get(key, envir = env))
+    },
+    set_value = function(key, value) {
+      return(assign(key, value, envir = env))
+    },
+    
+    fit = function(observations, num_chains = 2, num_states = num_chains, T = NULL, max_iterations = 100, tolerance = 0.0001) {
+      message("FIT")
+    },
+    
+    sample = function(seq_length) {
+      message("SAMPLE")
+    }
+  )
+    
+  assign('this', this, envir = env)
+  
   class(this) <- append(class(this), "FactorialHmm")
   
   return(this)
 }
 
-fhmm <- FactorialHmm()
-
+  
 dataset <- as.matrix(read.csv("./data/m200x3.csv", header = FALSE))
 #dataset <- as.matrix(read.csv("./data/X", header = FALSE))
 
 #dataset <- rand_matrix(1:100, 200, 3)
 
-result <- fhmm$estimate(dataset, num_chains = 1, num_states = 4, max_iterations = 121)
+fhmm <- FactorialHmm()
+
+result <- fhmm$fit(dataset, num_chains = 1, num_states = 4, max_iterations = 121)
 print(result)
