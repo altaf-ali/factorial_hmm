@@ -68,10 +68,6 @@ FactorialHmm <- setRefClass("FactorialHmm",
         dd[i,] <- base(i - 1, num_states, num_chains)
       }
       
-      B <- zeros(sequence_length,num_states ^ num_chains)
-      gamma <- zeros(sequence_length,num_states ^ num_chains)
-      B2 <- zeros(sequence_length * num_states ^ num_chains,num_states ^ num_chains)
-      
       eta <- zeros(sequence_length * num_states * num_chains,num_states * num_chains)
       
       Mub <- zeros(num_states ^ num_chains,p)
@@ -217,7 +213,7 @@ FactorialHmm <- setRefClass("FactorialHmm",
           break
         }
         
-        # num_chains STEP 
+        # M STEP 
         
         # outputs -- using SVD as generally ill-conditioned (mu=pinv(Eta)*GammaX);
         
@@ -304,6 +300,6 @@ dataset <- as.matrix(read.csv("./data/m200x3.csv", header = FALSE))
 model <- FactorialHmm$new(num_chains = 2, num_states = 4)
 model$fit(dataset)
 
-model$rng$close()
+model$rng$shutdown()
 
 

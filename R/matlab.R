@@ -2,7 +2,8 @@ RandomNumberGenerator <- setRefClass("RandomNumberGenerator",
    methods = list(
      set.seed = function(seed, kind = NULL) { base::set.seed(seed, kind) },
      runif = function(rows, cols, min = 0, max = 1) { matrix(base::runif(rows * cols, min, max), rows, cols) },
-     randn = function(rows, cols, mean = 0, sd = 1) { matrix(base::rnorm(rows * cols, mean, sd), rows, cols) }
+     randn = function(rows, cols, mean = 0, sd = 1) { matrix(base::rnorm(rows * cols, mean, sd), rows, cols) },
+     shutdown = function() { }
    )
 )
 
@@ -23,9 +24,9 @@ MatlabRandomNumberGenerator <- setRefClass("MatlabRandomNumberGenerator",
         connection <<- matlab
     },
     
-    finalize = function() { close() },
+    finalize = function() { shutdown() },
      
-    close = function() {
+    shutdown = function() {
       if (is.null(connection))
         return()
       
